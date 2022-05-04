@@ -8,6 +8,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.summingInt;
 
 public class UserMealsUtil {
     public static void main(String[] args) {
@@ -34,7 +38,8 @@ public class UserMealsUtil {
                 LocalTime.of(13, 0), 1000);
         mealsTo.forEach(System.out::println);
 
-//        System.out.println(filteredByStreams(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000));
+        System.out.println(filteredByStreams(meals, LocalTime.of(7, 0),
+                LocalTime.of(12, 0), 2000));
     }
 
     public static List<UserMealWithExcess> filteredByCycles(List<UserMeal> meals, LocalTime startTime,
@@ -70,8 +75,22 @@ public class UserMealsUtil {
         return resultMealWithExcess;
     }
 
-    public static List<UserMealWithExcess> filteredByStreams(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        // TODO Implement by streams
-        return null;
+    public static List<UserMealWithExcess> filteredByStreams(List<UserMeal> meals, LocalTime startTime,
+                                                             LocalTime endTime, int caloriesPerDay) {
+
+        List<UserMeal> resultMeals = meals.stream().filter(x -> (x.getDateTime().toLocalTime().isAfter(startTime)
+                        || x.getDateTime().toLocalTime().equals(startTime))
+                        && x.getDateTime().toLocalTime().isBefore(endTime))
+                .sorted(Comparator.comparing(UserMeal::getDateTime).reversed())
+                .collect(Collectors.toList());
+
+        Map<LocalDate, Integer> excessCalories = meals.stream()
+                .collect(groupingBy(x -> x.getDateTime().toLocalDate(), summingInt(UserMeal::getCalories)));
+
+        List<UserMealWithExcess> resultMealWithExcess = resultMeals.stream().map(x -> new UserMealWithExcess(x.getDateTime(),
+                x.getDescription(), x.getCalories(),
+                excessCalories.get(x.getDateTime().toLocalDate()) > caloriesPerDay)).collect(Collectors.toList());
+
+        return resultMealWithExcess;
     }
 }
