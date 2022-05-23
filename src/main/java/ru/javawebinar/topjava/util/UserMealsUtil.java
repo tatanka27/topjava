@@ -36,7 +36,7 @@ public class UserMealsUtil {
         mealsTo.forEach(System.out::println);
 
         System.out.println(filteredByStreams(meals, LocalTime.of(7, 0),
-                LocalTime.of(12, 0), 2000));
+                LocalTime.of(13, 0), 1000));
     }
 
     public static List<UserMealWithExcess> filteredByCycles(List<UserMeal> meals, LocalTime startTime,
@@ -61,18 +61,13 @@ public class UserMealsUtil {
 
     public static List<UserMealWithExcess> filteredByStreams(List<UserMeal> meals, LocalTime startTime,
                                                              LocalTime endTime, int caloriesPerDay) {
-        List<UserMeal> resultMeals = meals.stream().filter(x -> (x.getDateTime().toLocalTime().isAfter(startTime)
-                        || x.getDateTime().toLocalTime().equals(startTime))
-                        && x.getDateTime().toLocalTime().isBefore(endTime))
-                .sorted(Comparator.comparing(UserMeal::getDateTime).reversed())
+        Map<LocalDate, Integer> sumCaloriesPerDay = meals.stream()
+                .collect(groupingBy(meal -> meal.getDateTime().toLocalDate(), summingInt(UserMeal::getCalories)));
+
+        return meals.stream()
+                .filter(meal -> (TimeUtil.isBetweenHalfOpen(meal.getDateTime().toLocalTime(), startTime, endTime)))
+                .map(meal -> new UserMealWithExcess(meal.getDateTime(), meal.getDescription(), meal.getCalories(),
+                sumCaloriesPerDay.get(meal.getDateTime().toLocalDate()) > caloriesPerDay))
                 .collect(Collectors.toList());
-
-        Map<LocalDate, Integer> excessCalories = meals.stream()
-                .collect(groupingBy(x -> x.getDateTime().toLocalDate(), summingInt(UserMeal::getCalories)));
-
-        List<UserMealWithExcess> resultMealWithExcess = resultMeals.stream().map(x -> new UserMealWithExcess(x.getDateTime(),
-                x.getDescription(), x.getCalories(),
-                excessCalories.get(x.getDateTime().toLocalDate()) > caloriesPerDay)).collect(Collectors.toList());
-        return resultMealWithExcess;
     }
 }
