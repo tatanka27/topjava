@@ -2,7 +2,6 @@ package ru.javawebinar.topjava.util;
 
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
-import ru.javawebinar.topjava.model.MealsData;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -13,10 +12,6 @@ import java.util.stream.Collectors;
 public class MealsUtil {
 
     public static void main(String[] args) {
-        List<Meal> meals = MealsData.get();
-
-        List<MealTo> mealsTo = filteredByStreams(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), MealsData.CALORIES_PER_DAY);
-        mealsTo.forEach(System.out::println);
     }
 
     public static List<MealTo> filteredByStreams(List<Meal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
@@ -33,6 +28,6 @@ public class MealsUtil {
     }
 
     private static MealTo createTo(Meal meal, boolean excess) {
-        return new MealTo(meal.getDateTime(), meal.getDescription(), meal.getCalories(), excess);
+        return new MealTo(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), excess);
     }
 }
