@@ -5,11 +5,13 @@ import java.util.Optional;
 
 public interface MealsData {
 
-    public List<Meal> get();
+    List<Meal> getAll();
 
-    public Optional<Meal> getById(int id);
-    public void create(Meal meal);
-    public void delete(int id);
-    public void update(Meal meal);
+    Optional<Meal> getById(int id);
 
+    void insert(Meal meal);
+
+    void delete(int id);
+
+    void update(Meal meal);
 }

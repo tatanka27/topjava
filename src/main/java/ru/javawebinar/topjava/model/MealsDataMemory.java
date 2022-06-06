@@ -1,15 +1,19 @@
 package ru.javawebinar.topjava.model;
 
+import ru.javawebinar.topjava.util.Counter;
+
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class MealsDataMemory implements MealsData{
+public class MealsDataMemory implements MealsData {
     public static final int CALORIES_PER_DAY = 2000;
+
+    private static Counter counter;
 
     private final CopyOnWriteArrayList<Meal> meals;
 
@@ -23,9 +27,11 @@ public class MealsDataMemory implements MealsData{
                 new Meal(6, LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500),
                 new Meal(7, LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410)
         ));
+        Optional<Meal> m = findMaxId();
+        counter = new Counter(m.map(meal -> meal.getId() + 1).orElse(0));
     }
 
-    public List<Meal> get() {
+    public List<Meal> getAll() {
         return meals;
     }
 
@@ -39,7 +45,8 @@ public class MealsDataMemory implements MealsData{
     }
 
     @Override
-    public void create(Meal meal) {
+    public void insert(Meal meal) {
+        meal.setId(counter.getId());
         meals.add(meal);
     }
 
@@ -58,5 +65,9 @@ public class MealsDataMemory implements MealsData{
             oldMeal.get().setCalories(meal.getCalories());
             oldMeal.get().setDateTime(meal.getDateTime());
         }
+    }
+
+    private Optional<Meal> findMaxId() {
+        return meals.stream().max(Comparator.comparing(Meal::getId));
     }
 }
