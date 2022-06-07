@@ -18,7 +18,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Optional;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -29,10 +28,10 @@ public class MealServlet extends HttpServlet {
     public static final String FORM_MEAL = "formMeal.jsp";
     public static final String URL_LIST_MEAL = "meals";
 
-    private MealRepository mealsData;
+    private MealRepository mealRepository;
 
     public void init() {
-        this.mealsData = new MemoryMealRepository();
+        this.mealRepository = new MemoryMealRepository();
     }
 
     @Override
@@ -42,7 +41,7 @@ public class MealServlet extends HttpServlet {
 
         if (action == null) {
             forward = LIST_MEAL;
-            List<MealTo> mealsTo = MealsUtil.filteredByStreams(mealsData.getAll(), LocalTime.MIN, LocalTime.MAX,
+            List<MealTo> mealsTo = MealsUtil.filteredByStreams(mealRepository.getAll(), LocalTime.MIN, LocalTime.MAX,
                     User.CALORIES_PER_DAY);
             request.setAttribute("meals", mealsTo);
             request.setAttribute("dateTimeFormatter", DATE_TIME_FORMATTER);
@@ -51,18 +50,17 @@ public class MealServlet extends HttpServlet {
             switch (action.toLowerCase()) {
                 case "new":
                     forward = FORM_MEAL;
-                    request.setAttribute("meal", new Meal(0,LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 0));
+                    request.setAttribute("meal", new Meal(0, LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 0));
                     request.getRequestDispatcher(forward).forward(request, response);
                     break;
                 case "edit":
                     forward = FORM_MEAL;
-                    int id = Integer.parseInt(request.getParameter("id"));
-                    Optional<Meal> meal = mealsData.getById(id);
-                    meal.ifPresent(value -> request.setAttribute("meal", value));
+                    int id = getIdFromRequest(request);
+                    mealRepository.getById(id).ifPresent(value -> request.setAttribute("meal", value));
                     request.getRequestDispatcher(forward).forward(request, response);
                     break;
                 case "delete":
-                    mealsData.delete(Integer.parseInt(request.getParameter("id")));
+                    mealRepository.delete(getIdFromRequest(request));
                     response.sendRedirect(URL_LIST_MEAL);
                     break;
             }
@@ -73,14 +71,18 @@ public class MealServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
 
-        int id = Integer.parseInt(request.getParameter("id"));
+        int id = getIdFromRequest(request);
         if (id == 0) {
-            mealsData.insert(new Meal(LocalDateTime.parse(request.getParameter("dateTime")),
+            mealRepository.insert(new Meal(LocalDateTime.parse(request.getParameter("dateTime")),
                     request.getParameter("description"), Integer.parseInt(request.getParameter("calories"))));
         } else {
-            mealsData.update(new Meal(id, LocalDateTime.parse(request.getParameter("dateTime")),
+            mealRepository.update(new Meal(id, LocalDateTime.parse(request.getParameter("dateTime")),
                     request.getParameter("description"), Integer.parseInt(request.getParameter("calories"))));
         }
         response.sendRedirect(URL_LIST_MEAL);
+    }
+
+    private int getIdFromRequest(HttpServletRequest request) {
+        return Integer.parseInt(request.getParameter("id"));
     }
 }

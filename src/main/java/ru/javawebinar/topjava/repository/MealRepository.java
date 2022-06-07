@@ -10,9 +10,9 @@ public interface MealRepository {
 
     Optional<Meal> getById(int id);
 
-    void insert(Meal meal);
+    Meal insert(Meal meal);
 
     void delete(int id);
 
-    void update(Meal meal);
+    Meal update(Meal meal);
 }
