@@ -36,10 +36,12 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        log.debug("doGet()");
         String action = request.getParameter("action");
         String forward;
 
         if (action == null) {
+            log.debug("redirect to meals");
             forward = LIST_MEAL;
             List<MealTo> mealsTo = MealsUtil.filteredByStreams(mealRepository.getAll(), LocalTime.MIN, LocalTime.MAX,
                     User.CALORIES_PER_DAY);
@@ -49,17 +51,20 @@ public class MealServlet extends HttpServlet {
         } else {
             switch (action.toLowerCase()) {
                 case "new":
+                    log.debug("redirect to meals/new");
                     forward = FORM_MEAL;
                     request.setAttribute("meal", new Meal(0, LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 0));
                     request.getRequestDispatcher(forward).forward(request, response);
                     break;
                 case "edit":
+                    log.debug("redirect to meals/edit");
                     forward = FORM_MEAL;
                     int id = getIdFromRequest(request);
                     mealRepository.getById(id).ifPresent(value -> request.setAttribute("meal", value));
                     request.getRequestDispatcher(forward).forward(request, response);
                     break;
                 case "delete":
+                    log.debug("redirect to meals/delete");
                     mealRepository.delete(getIdFromRequest(request));
                     response.sendRedirect(URL_LIST_MEAL);
                     break;
@@ -69,13 +74,16 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        log.debug("doPost()");
         request.setCharacterEncoding("UTF-8");
 
         int id = getIdFromRequest(request);
         if (id == 0) {
+            log.debug("insert()");
             mealRepository.insert(new Meal(LocalDateTime.parse(request.getParameter("dateTime")),
                     request.getParameter("description"), Integer.parseInt(request.getParameter("calories"))));
         } else {
+            log.debug("update()" + "id=" +id);
             mealRepository.update(new Meal(id, LocalDateTime.parse(request.getParameter("dateTime")),
                     request.getParameter("description"), Integer.parseInt(request.getParameter("calories"))));
         }
