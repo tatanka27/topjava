@@ -12,7 +12,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MemoryMealRepository implements MealRepository {
-
     private final AtomicInteger counter;
 
     private final Map<Integer, Meal> meals;
