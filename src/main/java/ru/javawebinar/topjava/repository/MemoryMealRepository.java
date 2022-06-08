@@ -4,10 +4,7 @@ import ru.javawebinar.topjava.model.Meal;
 
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -19,13 +16,19 @@ public class MemoryMealRepository implements MealRepository {
     public MemoryMealRepository() {
         counter = new AtomicInteger(1);
         meals = new ConcurrentHashMap<>();
-        insert(new Meal(1, LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500));
-        insert(new Meal(2, LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000));
-        insert(new Meal(3, LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500));
-        insert(new Meal(4, LocalDateTime.of(2020, Month.JANUARY, 31, 0, 0), "Еда на граничное значение", 100));
-        insert(new Meal(5, LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000));
-        insert(new Meal(6, LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500));
-        insert(new Meal(7, LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410));
+        List<Meal> listMeal = Arrays.asList(
+                new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500),
+                new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000),
+                new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500),
+                new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 0, 0), "Еда на граничное значение", 100),
+                new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000),
+                new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500),
+                new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410)
+        );
+
+        for (Meal meal : listMeal) {
+            insert(meal);
+        }
     }
 
     public List<Meal> getAll() {
@@ -39,19 +42,19 @@ public class MemoryMealRepository implements MealRepository {
 
     @Override
     public Meal insert(Meal meal) {
-        meal.setId(counter.getAndIncrement());
-        meals.putIfAbsent(meal.getId(), meal);
-        return meals.get(meal.getId());
+        int id = counter.getAndIncrement();
+        meal.setId(id);
+        meals.put(id, meal);
+        return meal;
     }
 
     @Override
     public void delete(int id) {
-        getById(id).ifPresent(value -> meals.remove(value.getId()));
+        meals.remove(id);
     }
 
     @Override
-    public Meal update(Meal meal) {
-        meals.replace(meal.getId(), meal);
-        return meals.get(meal.getId());
+    public Optional<Meal> update(Meal meal) {
+        return meals.replace(meal.getId(), meal) != null ? Optional.of(meal) : Optional.empty();
     }
 }

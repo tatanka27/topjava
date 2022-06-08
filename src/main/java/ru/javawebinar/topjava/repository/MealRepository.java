@@ -14,5 +14,5 @@ public interface MealRepository {
 
     void delete(int id);
 
-    Meal update(Meal meal);
+    Optional<Meal> update(Meal meal);
 }
