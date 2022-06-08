@@ -48,17 +48,20 @@ public class MealServlet extends HttpServlet {
                 request.setAttribute("meal", new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 0));
                 request.getRequestDispatcher(forward).forward(request, response);
                 break;
-            case "edit":
+            case "edit": {
                 forward = FORM_MEAL;
                 int id = getIdFromRequest(request);
                 log.debug("redirect to meals/edit {}", id);
                 mealRepository.getById(id).ifPresent(value -> request.setAttribute("meal", value));
                 request.getRequestDispatcher(forward).forward(request, response);
                 break;
-            case "delete":
-                log.debug("redirect to meals/delete {}", getIdFromRequest(request));
-                mealRepository.delete(getIdFromRequest(request));
+            }
+            case "delete": {
+                int id = getIdFromRequest(request);
+                log.debug("redirect to meals/delete {}", id);
+                mealRepository.delete(id);
                 response.sendRedirect(URL_LIST_MEAL);
+            }
                 break;
             default:
                 log.debug("redirect to meals");

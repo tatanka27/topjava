@@ -26,9 +26,7 @@ public class MemoryMealRepository implements MealRepository {
                 new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410)
         );
 
-        for (Meal meal : listMeal) {
-            insert(meal);
-        }
+        listMeal.forEach(this::insert);
     }
 
     public List<Meal> getAll() {
