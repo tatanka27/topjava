@@ -19,7 +19,6 @@ public class MealRestController {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    private final int userId = SecurityUtil.authUserId();
 
     private final MealService service;
 
@@ -27,30 +26,36 @@ public class MealRestController {
         this.service = service;
     }
 
-    public List<MealTo> getAll(int userId) {
+    public List<MealTo> getAll() {
         log.info("getAll");
+        int userId = SecurityUtil.authUserId();
         return MealsUtil.getTos(service.getAll(userId), MealsUtil.DEFAULT_CALORIES_PER_DAY);
     }
 
     public Meal get(int id) {
         log.info("get {}", id);
+        int userId = SecurityUtil.authUserId();
         return service.get(id, userId);
     }
 
     public Meal create(Meal meal) {
         log.info("create {}", meal);
+        int userId = SecurityUtil.authUserId();
+        meal.setUserId(userId);
         checkNew(meal);
         return service.create(meal, userId);
     }
 
     public void delete(int id) {
         log.info("delete {}", id);
+        int userId = SecurityUtil.authUserId();
         service.delete(id, userId);
     }
 
     public void update(Meal meal, int id) {
         log.info("update {} with id={}", meal, id);
         assureIdConsistent(meal, id);
+        int userId = SecurityUtil.authUserId();
         service.update(meal, userId);
     }
 }
