@@ -88,8 +88,6 @@ public class MealServlet extends HttpServlet {
             case "all":
             default:
                 log.info("getAll");
-//                SecurityUtil.setAuthUserId(Integer.parseInt(request.getParameter("userId")));
-                SecurityUtil.setAuthUserId(1);
                 request.setAttribute("meals", mealRestController.getAll());
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;

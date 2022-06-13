@@ -9,6 +9,7 @@ import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,12 @@ public class InMemoryMealRepository implements MealRepository {
 
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
-            repository.get(meal.getUserId()).add(meal);
+            List<Meal> list = repository.get(meal.getUserId());
+            if (list == null) {
+                list = new ArrayList<>();
+            }
+            list.add(meal);
+            repository.put(meal.getUserId(), list);
             return meal;
         }
         // handle case: update, but not present in storage
