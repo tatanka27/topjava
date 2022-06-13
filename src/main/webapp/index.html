@@ -8,7 +8,14 @@
 <hr>
 <ul style="font-size: large">
     <li><a href="users">Users</a></li>
-    <li><a href="meals">Meals</a></li>
+    <form action="meals">
+        <p><select size="3" name="userId">
+            <option disabled>Выберите пользователя</option>
+            <option value="1" selected>User1</option>
+            <option value="2">User2</option>
+        </select></p>
+        <p><input type="submit" value="Войти"></p>
+    </form>
 </ul>
 </body>
 </html>
