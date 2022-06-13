@@ -44,7 +44,6 @@
         </dl>
 
         <button type="submit">Filter</button>
-        <button type="button">Cancel</button>
     </form>
 
     <br><br>
