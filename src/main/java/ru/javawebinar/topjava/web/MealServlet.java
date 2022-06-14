@@ -40,12 +40,11 @@ public class MealServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
         String id = request.getParameter("id");
-        int userId = SecurityUtil.authUserId();
 
         Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
-                Integer.parseInt(request.getParameter("calories")), userId);
+                Integer.parseInt(request.getParameter("calories")), null);
 
         log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
         if (meal.isNew()) {
@@ -85,7 +84,7 @@ public class MealServlet extends HttpServlet {
                 String endTime = request.getParameter("endTime");
                 request.setAttribute("meals", mealRestController.getAllFilerByDateTime(
                         startDate.isEmpty() ? LocalDate.MIN : LocalDate.parse(request.getParameter("startDate")),
-                        endDate.isEmpty() ? LocalDate.MAX : LocalDate.parse(request.getParameter("startDate")),
+                        endDate.isEmpty() ? LocalDate.MAX : LocalDate.parse(request.getParameter("endDate")),
                         startTime.isEmpty() ? LocalTime.MIN : LocalTime.parse(request.getParameter("startTime")),
                         endTime.isEmpty() ? LocalTime.MAX : LocalTime.parse(request.getParameter("endTime"))));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
