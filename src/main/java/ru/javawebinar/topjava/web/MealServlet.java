@@ -76,12 +76,16 @@ public class MealServlet extends HttpServlet {
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
                 break;
-            case "filter":
+            case "filter": {
                 log.info("filter");
                 String startDate = request.getParameter("startDate");
                 String endDate = request.getParameter("endDate");
                 String startTime = request.getParameter("startTime");
                 String endTime = request.getParameter("endTime");
+                request.setAttribute("startDate", startDate);
+                request.setAttribute("endDate", endDate);
+                request.setAttribute("startTime", startTime);
+                request.setAttribute("endTime", endTime);
                 request.setAttribute("meals", mealRestController.getAllFilerByDateTime(
                         startDate.isEmpty() ? LocalDate.MIN : LocalDate.parse(request.getParameter("startDate")),
                         endDate.isEmpty() ? LocalDate.MAX : LocalDate.parse(request.getParameter("endDate")),
@@ -89,12 +93,14 @@ public class MealServlet extends HttpServlet {
                         endTime.isEmpty() ? LocalTime.MAX : LocalTime.parse(request.getParameter("endTime"))));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
+            }
             case "all":
-            default:
+            default: {
                 log.info("getAll");
                 request.setAttribute("meals", mealRestController.getAll());
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
+            }
         }
     }
 
