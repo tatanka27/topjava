@@ -71,6 +71,7 @@ public class JdbcMealRepository implements MealRepository {
         return jdbcTemplate.query("SELECT * FROM meals WHERE user_id=? ORDER BY datetime desc ", ROW_MAPPER, userId);
     }
 
+    // TODO filter only by date
     @Override
     public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
         return jdbcTemplate.query("SELECT * FROM meals WHERE user_id=? and datetime >=? and datetime <=? ORDER BY datetime desc", ROW_MAPPER,
