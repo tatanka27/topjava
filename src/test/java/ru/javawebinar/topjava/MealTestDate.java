@@ -47,7 +47,7 @@ public class MealTestDate {
     }
 
     public static Meal getUpdatedNotRight(int i) {
-        Meal updated = new Meal(mealsAdmin.get(1));
+        Meal updated = new Meal(mealsAdmin.get(i));
         updated.setDateTime(LocalDateTime.now());
         updated.setDescription("Update meal");
         updated.setCalories(10);
