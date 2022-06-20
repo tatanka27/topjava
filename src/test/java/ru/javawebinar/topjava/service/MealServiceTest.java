@@ -16,9 +16,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestDate.*;
@@ -41,7 +39,7 @@ public class MealServiceTest {
     @Test
     public void get() {
         Meal meal = service.get(100003, AUTH_USER_ID);
-        assertMatch(meal, MealTestDate.mealsUser.get(0));
+        assertMatch(meal, MealTestDate.mealsUser.get(4));
     }
 
     @Test
@@ -75,13 +73,13 @@ public class MealServiceTest {
         LocalDate startDate = LocalDate.of(2022, Month.FEBRUARY, 1);
         LocalDate endDate =  LocalDate.of(2022, Month.FEBRUARY, 1);
         List<Meal> meals = service.getBetweenInclusive(startDate, endDate, AUTH_USER_ID);
+        assertMatch(meals, getMealsBetweenInclusive(startDate, endDate));
     }
 
     @Test
     public void getAll() {
         List<Meal> meals = service.getAll(AUTH_USER_ID);
-        assertMatch(meals, mealsUser.stream()
-                .sorted(Comparator.comparing(Meal::getDateTime).reversed()).collect(Collectors.toList()));
+        assertMatch(meals, mealsUser);
     }
 
     @Test

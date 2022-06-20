@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -74,7 +75,10 @@ public class JdbcMealRepository implements MealRepository {
     // TODO filter only by date
     @Override
     public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
+        LocalDate startDate = startDateTime.toLocalDate();
+        LocalDate endDate = endDateTime.toLocalDate();
+
         return jdbcTemplate.query("SELECT * FROM meals WHERE user_id=? and datetime >=? and datetime <=? ORDER BY datetime desc", ROW_MAPPER,
-                userId, startDateTime, endDateTime);
+                userId, startDate, endDate);
     }
 }
