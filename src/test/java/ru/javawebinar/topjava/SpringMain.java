@@ -1,16 +1,13 @@
 package ru.javawebinar.topjava;
 
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.jdbc.core.JdbcTemplate;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 import ru.javawebinar.topjava.web.user.AdminRestController;
 
-import javax.sql.DataSource;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Month;
@@ -35,10 +32,5 @@ public class SpringMain {
             System.out.println();
             System.out.println(mealController.getBetween(null, null, null, null));
         }
-    }
-
-    @Bean
-    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
-        return new JdbcTemplate(dataSource);
     }
 }
