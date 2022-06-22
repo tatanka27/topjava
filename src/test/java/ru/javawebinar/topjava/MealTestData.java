@@ -6,23 +6,25 @@ import java.time.LocalDateTime;
 import java.time.Month;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
 public class MealTestData {
 
-    public static final int NOT_RIGHT = 100009;
+    public static final int MEAL_ID = START_SEQ + 3;
+    public static final int ADMIN_MEAL_ID = MEAL_ID + 6;
     public static final int NOT_FOUND = 55;
 
-    public static Meal meal6User = new Meal(100008, LocalDateTime.of(2022, Month.FEBRUARY, 2, 18, 0), "Ужин User", 1500);
-    public static Meal meal5User = new Meal(100007, LocalDateTime.of(2022, Month.FEBRUARY, 2, 8, 0), "Завтрак User", 1500);
-    public static Meal meal4User = new Meal(100006, LocalDateTime.of(2022, Month.FEBRUARY, 2, 0, 0), "Еда на граничное значение", 100);
-    public static Meal meal3User = new Meal(100005, LocalDateTime.of(2022, Month.FEBRUARY, 1, 19, 0), "Ужин User", 500);
-    public static Meal meal2User = new Meal(100004, LocalDateTime.of(2022, Month.FEBRUARY, 1, 15, 0), "Обед User", 600);
-    public static Meal meal1User = new Meal(100003, LocalDateTime.of(2022, Month.FEBRUARY, 1, 9, 0), "Завтрак User", 400);
+    public static Meal userMeal6 = new Meal(MEAL_ID + 5, LocalDateTime.of(2022, Month.FEBRUARY, 2, 18, 0), "Ужин User", 1500);
+    public static Meal userMeal5 = new Meal(MEAL_ID + 4, LocalDateTime.of(2022, Month.FEBRUARY, 2, 8, 0), "Завтрак User", 1500);
+    public static Meal userMeal4 = new Meal(MEAL_ID + 3, LocalDateTime.of(2022, Month.FEBRUARY, 2, 0, 0), "Еда на граничное значение", 100);
+    public static Meal userMeal3 = new Meal(MEAL_ID + 2, LocalDateTime.of(2022, Month.FEBRUARY, 1, 19, 0), "Ужин User", 500);
+    public static Meal userMeal2 = new Meal(MEAL_ID + 1, LocalDateTime.of(2022, Month.FEBRUARY, 1, 15, 0), "Обед User", 600);
+    public static Meal userMeal1 = new Meal(MEAL_ID, LocalDateTime.of(2022, Month.FEBRUARY, 1, 9, 0), "Завтрак User", 400);
 
 
-    public static Meal meal3Admin = new Meal(100011, LocalDateTime.of(2022, Month.FEBRUARY, 1, 19, 0), "Обед Admin", 2500);
-    public static Meal meal2Admin = new Meal(100010, LocalDateTime.of(2022, Month.FEBRUARY, 1, 18, 0), "Бранч Admin", 600);
-    public static Meal meal1Admin = new Meal(100009, LocalDateTime.of(2022, Month.FEBRUARY, 1, 10, 0), "Второй завтрак Admin", 400);
+    public static Meal adminMeal3 = new Meal(MEAL_ID +8 , LocalDateTime.of(2022, Month.FEBRUARY, 1, 19, 0), "Обед Admin", 2500);
+    public static Meal adminMeal2 = new Meal(MEAL_ID + 7, LocalDateTime.of(2022, Month.FEBRUARY, 1, 18, 0), "Бранч Admin", 600);
+    public static Meal adminMeal1 = new Meal(MEAL_ID + 6, LocalDateTime.of(2022, Month.FEBRUARY, 1, 10, 0), "Второй завтрак Admin", 400);
 
 
     public static Meal getNew() {
@@ -30,15 +32,15 @@ public class MealTestData {
     }
 
     public static Meal getUpdated() {
-        Meal updated = new Meal(meal1User);
+        Meal updated = new Meal(userMeal1);
         updated.setDateTime(LocalDateTime.of(2022, Month.FEBRUARY, 3, 15, 0));
         updated.setDescription("Update meal");
         updated.setCalories(10);
         return updated;
     }
 
-    public static Meal getUpdatedNotRight() {
-        Meal updated = new Meal(meal1Admin);
+    public static Meal getUpdatedAdminMeal() {
+        Meal updated = new Meal(adminMeal1);
         updated.setDateTime(LocalDateTime.of(2022, Month.FEBRUARY, 3, 15, 0));
         updated.setDescription("Update meal");
         updated.setCalories(10);
