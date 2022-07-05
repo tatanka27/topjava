@@ -23,7 +23,7 @@ public class DataJpaMealRepository implements MealRepository {
 
     @Override
     public Meal save(Meal meal, int userId) {
-        User user = crudUserRepository.findById(userId).orElse(null);
+        User user = crudUserRepository.getReferenceById(userId);
         meal.setUser(user);
 
         if (meal.isNew()) {
